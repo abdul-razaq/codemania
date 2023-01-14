@@ -1,3 +1,4 @@
+import { Reaction } from './reaction.entity';
 import { Exclude } from 'class-transformer';
 import { User } from 'src/user/entites/user.entity';
 import {
@@ -5,6 +6,7 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -32,4 +34,10 @@ export class Posts {
 
   @UpdateDateColumn({ type: 'timestamptz', nullable: true })
   updatedOn: Date;
+
+  @OneToMany(() => Reaction, (reaction) => reaction.post, {
+    eager: true,
+    cascade: true,
+  })
+  reactions: Reaction[];
 }
