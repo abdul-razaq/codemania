@@ -43,8 +43,7 @@ import { User } from './user/entites/user.entity';
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         type: 'postgres',
-        connectString:
-          'postgres://oxizbklr:veKaIHd87by20T4cnO4HZHuFZjyDdJWL@chunee.db.elephantsql.com/oxizbklr',
+        connectString: config.get('DATABASE_CONNECT_STRING'),
         synchronize: config.get('APP_MODE') === 'development',
         logging: config.get('APP_MODE') === 'development',
         autoLoadEntities: true,
