@@ -1,10 +1,12 @@
 import * as argon2 from 'argon2';
 import { Exclude, Expose } from 'class-transformer';
+import { Posts } from 'src/post/entities/post.entity';
 import {
   BeforeInsert,
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -45,4 +47,7 @@ export class User {
   async hashPassword() {
     this.password = await argon2.hash(this.password, { saltLength: 10 });
   }
+
+  @OneToMany(() => Posts, (posts) => posts.creator)
+  posts: Posts[];
 }
