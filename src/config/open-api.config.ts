@@ -16,7 +16,6 @@ export function generateOpenApiConfig(app: INestApplication) {
     )
     .setLicense('CodeMania', 'https://codemania.com')
     .setTermsOfService('https://codemania.com')
-    .setBasePath('http://localhost:3000/api/v1')
     .build();
 
   const document = SwaggerModule.createDocument(app, openApiConfig);

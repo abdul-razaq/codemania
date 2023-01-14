@@ -25,7 +25,7 @@ export class AuthService {
     });
   }
 
-  async singUp(signUpDto: SignUpDto) {
+  async signUp(signUpDto: SignUpDto) {
     try {
       if (signUpDto.password !== signUpDto.passwordRepeat) {
         throw new BadRequestException('passwords must match');
@@ -39,7 +39,7 @@ export class AuthService {
       const savedUser = await this.userRepo.save(user);
 
       const token = this.generateAccessToken(savedUser);
-
+      delete user.password;
       return {
         user: savedUser,
         token,
@@ -63,6 +63,7 @@ export class AuthService {
     if (!isValidPassword) {
       throw new ForbiddenException('email address or password is invalid');
     }
+    delete user.password;
     const token = this.generateAccessToken(user);
     return {
       user,

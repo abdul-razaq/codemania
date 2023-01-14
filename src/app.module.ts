@@ -1,3 +1,4 @@
+import { AllExceptionsFilter } from './filters/http-exception.filter';
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -8,7 +9,12 @@ import { LikesModule } from './likes/likes.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { validateEnv } from './config/validate-env.config';
-import { ThrottlerModule } from '@nestjs/throttler';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { ResponseInterceptor } from './interceptors/response.interceptor';
+import { AuthGuard } from './auth/guards/auth.guard';
+import { JwtModule } from '@nestjs/jwt';
+import { User } from './user/entites/user.entity';
 
 @Module({
   imports: [
@@ -16,6 +22,8 @@ import { ThrottlerModule } from '@nestjs/throttler';
     PostModule,
     UserModule,
     LikesModule,
+    JwtModule,
+    TypeOrmModule.forFeature([User]),
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: validateEnv(),
@@ -44,6 +52,24 @@ import { ThrottlerModule } from '@nestjs/throttler';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: AllExceptionsFilter,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ResponseInterceptor,
+    },
+  ],
 })
 export class AppModule {}
