@@ -15,3 +15,6 @@
 ## Host Server on platforms like repl.it
 
 ### Goodluck.
+
+## Additional Explanations
+  I used Reactions instead of Likes when modelling the Likes table. This is because I want to give room for other kind of reactions like love, impressive, sad e.t.c in the future instead of just like only.
